@@ -97,11 +97,7 @@ else
 fi
 
 # Wait RabbitMQ to start
-while true; do
-    compose_command exec -- rabbitmq-stats rabbitmqctl enable_feature_flag all > /dev/null 2>/dev/null && echo "" && echo "Enabling all feature flags" && echo "" && echo "Enabled all feature flags" && break
-    echo "Waiting for RabbitMQ to start..."
-    sleep 10;
-done
+while ! compose_command exec -- rabbitmq-stats rabbitmqctl status >/dev/null 2>&1; do echo "Waiting for RabbitMQ to start..."; sleep 10; done
 
 CURRENT_DATABASE_VERSION=$(compose_command exec -- core cat /opt/netskope/common/api/__init__.py | grep -oP "(?<=__version__ = \")[^\"]*")
 echo "CURRENT_DATABASE_VERSION=\"$CURRENT_DATABASE_VERSION\"" > "$DB_VERSION_ENV_FILE_LOCATION"

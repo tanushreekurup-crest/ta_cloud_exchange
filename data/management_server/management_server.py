@@ -901,14 +901,8 @@ def update_env(handler, update_data=None, env_file=None):
 
     if env_file:
         env_file_path = env_file
-    elif (
-        not env_file
-        and AVAILABLE_INPUTS.get("HA_CURRENT_NODE")
-        or AVAILABLE_INPUTS.get("LOCATION", "") != ".env.keys"
-    ):
-        env_file_path = os.path.join(
-            os.path.dirname(AVAILABLE_INPUTS.get("LOCATION", "")), ".env"
-        )
+    elif AVAILABLE_INPUTS.get("ENV_FILE"):
+        env_file_path = AVAILABLE_INPUTS.get("ENV_FILE")
     else:
         env_file_path = ".env"
     try:
